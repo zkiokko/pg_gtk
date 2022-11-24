@@ -1,5 +1,4 @@
 #include "gtk/gtk.h"
-@import url("./css/style.css");
 
 static void CExit(GtkButton *btn, gpointer data){
     GtkWindow *win =GTK_WINDOW(data);
@@ -13,9 +12,11 @@ static void onclick1(GtkButton *btn, gpointer data){
     s=gtk_button_get_label(btn);
     if(g_strcmp0(s, "Hello")==0){
         gtk_button_set_label(btn,"Hola");
-    }
-    else
+    }else if(g_strcmp0(s, "Hola")==0){
+        gtk_button_set_label(btn,"Hi");
+    }else{
         gtk_button_set_label(btn,"Hello");
+    }
 }
 static void activate(GtkApplication *app, gpointer user_data){
     g_print("hih");
@@ -30,13 +31,16 @@ static void activate(GtkApplication *app, gpointer user_data){
     gtk_window_set_child(GTK_WINDOW(win), box);
     btn1 =gtk_button_new_with_label("Hello");
 
-    contest= gtk_widget_get_style_context("btn1");
-    gtk_style_context_add_class(contest,"btn1");
+    contest= gtk_widget_get_style_context(btn1);
+    GtkCssProvider *provider = gtk_css_provider_new ();
+    gtk_css_provider_load_from_path (provider,"./css/style.css");
+    gtk_style_context_add_provider(contest, GTK_STYLE_PROVIDER(provider),GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+
 
     g_signal_connect(btn1,"clicked",G_CALLBACK(onclick1), NULL);
     btn2 =gtk_button_new_with_label("exit");
     /*gtk_button_size(GTK_BUTTON(btn2),50,50);*/
-    gtk_widget_add_css_class(btn2,G"color:red");
     gtk_button_set_has_frame(GTK_BUTTON(btn1),FALSE);
     g_signal_connect(btn2,"clicked",G_CALLBACK(CExit), win);
     btn3 =gtk_button_new_with_label("Hello");
